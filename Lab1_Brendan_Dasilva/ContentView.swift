@@ -8,12 +8,18 @@
 import SwiftUI
 
 struct ContentView: View {
+    // generate a random number between 1 and 100, inclusive
+    @State private var number: Int = Int.random(in: 1...100)
+    
     var body: some View {
         VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+            Text("\(number)")
+                .font(.headline)
+                .padding()
+                .frame(width: 150, height: 100)
+                .background(Color.gray.opacity(0.2))
+                .cornerRadius(10)
+            
         }
         .padding()
     }
