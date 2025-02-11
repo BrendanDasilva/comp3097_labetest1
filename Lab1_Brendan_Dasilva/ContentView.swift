@@ -16,36 +16,57 @@ struct ContentView: View {
     @State private var isCorrect: Bool = false
     
     var body: some View {
-        VStack {
-            Text("\(number)")
-                .font(.headline)
-                .padding()
-                .frame(width: 150, height: 100)
-                .background(Color.gray.opacity(0.2))
-                .cornerRadius(10)
-            
-            HStack {
-                Button("Prime") {
-                    checkAnswer(isPrime: true)
-                }
-                .buttonStyle(.borderedProminent)
+            VStack {
+                Spacer().frame(height: 30)
                 
-                Button("Not Prime") {
-                    checkAnswer(isPrime: false)
-                }
-                .buttonStyle(.borderedProminent)
-            
-            }
-            .padding()
-        
-            if showResult {
-                Image(systemName: isCorrect ? "checkmark.circle.fill" : "xmark.circle.fill")
-                    .foregroundColor(isCorrect ? .green : .red)
-                    .font(.largeTitle)
+                Text("\(number)")
+                    .font(.system(size: 80, weight: .bold))
                     .padding()
+                    .frame(width: 200, height: 120)
+                    .background(Color.gray.opacity(0.2))
+                    .cornerRadius(10)
+                    
+                Spacer().frame(height: 50)
+                
+                ZStack {
+                    if showResult {
+                        Image(systemName: isCorrect ? "checkmark.circle.fill" : "xmark.circle.fill")
+                            .foregroundColor(isCorrect ? .green : .red)
+                            .font(.system(size: 100))
+                            .transition(.opacity)
+                    }
+                }
+                .frame(height: 50) // fixed height to prevent shifting after button press
+                
+                Spacer().frame(height: 100)
+                
+                HStack(spacing: 20) {
+                    Button("Prime") {
+                        checkAnswer(isPrime: true)
+                    }
+                    .font(.title)
+                    .padding()
+                    .frame(width: 175, height: 80)
+                    .background(Color.blue)
+                    .foregroundColor(.white)
+                    .cornerRadius(10)
+                    
+                    Button("Not Prime") {
+                        checkAnswer(isPrime: false)
+                    }
+                    .font(.title)
+                    .padding()
+                    .frame(width: 175, height: 80)
+                    .background(Color.blue)
+                    .foregroundColor(.white)
+                    .cornerRadius(10)
+                }
+                .padding()
+                
+                Spacer()
             }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
-    }
 
     // function to check answer
     func checkAnswer(isPrime: Bool) {
