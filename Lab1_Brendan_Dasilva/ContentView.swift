@@ -20,6 +20,18 @@ struct ContentView: View {
                 .background(Color.gray.opacity(0.2))
                 .cornerRadius(10)
             
+            HStack {
+                Button("Prime") {
+                    // add action here
+                }
+                .buttonStyle(.borderedProminent)
+                
+                Button("Not Prime") {
+                    // add action here
+                }
+                .buttonStyle(.borderedProminent)
+            }
+            
         }
         .padding()
     }
