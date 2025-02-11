@@ -22,6 +22,7 @@ struct ContentView: View {
     // variable for the 5-second timer - if user does not answer within 5 seconds, its recorded as an incorrect answer
     @State private var timer: Timer?
     
+    
     var body: some View {
             VStack {
                 Spacer().frame(height: 30) // add some space to the top of the screen
@@ -75,7 +76,9 @@ struct ContentView: View {
                 Text("Correct: \(correctAnswers) | Wrong: \(wrongAnswers)")
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .onAppear(perform: startTimer)
         }
+    
 
     // function to check answer and update the UI accordingly
     func checkAnswer(isPrime: Bool) {
@@ -86,9 +89,30 @@ struct ContentView: View {
         isCorrect = correct
         showResult = true
         
-        // hide the result after 1 second and generate a new random number
+        if correct {
+            correctAnswers += 1
+        } else {
+            wrongAnswers += 1
+        }
+        
+        resetNumber()
+    }
+    
+    
+    // hide the result after 1 second and generate a new random number
+    func resetNumber() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
             showResult = false
+            number = Int.random(in: 1...100)
+        }
+    }
+    
+    
+    // start timer
+    func startTimer() {
+        timer?.invalidate()
+        timer = Timer.scheduledTimer(withTimeInterval: 5.0, repeats: true) { _ in
+            wrongAnswers += 1
             number = Int.random(in: 1...100)
         }
     }
