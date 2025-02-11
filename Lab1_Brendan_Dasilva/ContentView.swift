@@ -138,6 +138,7 @@ struct ContentView: View {
         wrongAnswers = 0
         attemptCount = 0
         showGameOverDialog = false
+        showResult = false
         number = Int.random(in: 1...100)
         startTimer()
     }
@@ -153,12 +154,15 @@ struct ContentView: View {
             // if no selection is made in time, count it as a wrong answer
             wrongAnswers += 1
             attemptCount += 1
+            isCorrect = false
+            showResult = true
             
             if attemptCount >= 10 {
                 showGameOverDialog = true
+                showResult = false
                 timer?.invalidate()
             } else {
-                number = Int.random(in: 1...100)
+                resetNumber()
             }
         }
     }
