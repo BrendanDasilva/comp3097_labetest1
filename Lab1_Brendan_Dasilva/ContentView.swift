@@ -26,25 +26,51 @@ struct ContentView: View {
             
             HStack {
                 Button("Prime") {
-                    // add action here
+                    checkAnswer(isPrime: true)
                 }
                 .buttonStyle(.borderedProminent)
                 
                 Button("Not Prime") {
-                    // add action here
+                    checkAnswer(isPrime: false)
                 }
                 .buttonStyle(.borderedProminent)
-            }
             
+            }
+            .padding()
+        
+            if showResult {
+                Image(systemName: isCorrect ? "checkmark.circle.fill" : "xmark.circle.fill")
+                    .foregroundColor(isCorrect ? .green : .red)
+                    .font(.largeTitle)
+                    .padding()
+            }
         }
-        .padding()
+    }
+
+    // function to check answer
+    func checkAnswer(isPrime: Bool) {
+        let correct = isPrime == isPrimeNumber(number)
+        isCorrect = correct
+        showResult = true
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            showResult = false
+            number = Int.random(in: 1...100)
+        }
+    }
+
+
+    // function to check if the number is prime or not
+    func isPrimeNumber(_ n: Int) -> Bool {
+        if n < 2 { return false }
+        for i in 2..<n {
+            if n % i == 0 { return false }
+        }
+        return true
     }
 }
 
-// function to check answer
 
-
-// function to check if the number is prime or not
 
 
 #Preview {
