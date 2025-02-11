@@ -103,7 +103,7 @@ struct ContentView: View {
     func checkAnswer(isPrime: Bool) {
         guard allowInput else { return } // prevent multiple inputs when timer expires
         allowInput = false
-        timer?.invalidate()
+        timer?.invalidate() // stop the timer when an answer is selected
         
         // compare the users input with the actual result of the prime number check
         let correct = isPrime == isPrimeNumber(number)
@@ -123,9 +123,9 @@ struct ContentView: View {
         attemptCount += 1
         if attemptCount >= 10 {
             showGameOverDialog = true
-            timer?.invalidate()
+            timer?.invalidate() // ensure the timer stops when the game ends
         } else {
-            resetNumber()
+            resetNumber() // move to the next round
         }
     }
     
@@ -133,16 +133,17 @@ struct ContentView: View {
     // function to hide the result after 1 second and generate a new random number
     func resetNumber() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            showResult = false
-            number = Int.random(in: 1...100)
+            showResult = false // hide the checkmark or X
+            number = Int.random(in: 1...100) // generate a new number
             allowInput = true // allow new input after number resets
-            resetTimer()
+            resetTimer() // restart the timer for the new round
         }
     }
     
     
     // function to reset the game after the game over dialog
     func resetGame() {
+        // reset all game state variables
         correctAnswers = 0
         wrongAnswers = 0
         attemptCount = 0
@@ -150,30 +151,29 @@ struct ContentView: View {
         showResult = false
         number = Int.random(in: 1...100)
         timeRemaining = 5
-        allowInput = true // allow new input after number resets
-        startTimer()
+        allowInput = true // enable input for each fresh start
+        startTimer() // start a new game timer
     }
     
     
-    // function to start the timer that updates the number every 5 seconds
+    // function to start the countdown timer
     func startTimer() {
-        // invalidate any existing timer before starting a new one
-        timer?.invalidate()
+        timer?.invalidate() // clear any existing timer
         timeRemaining = 5 // reset the timer
         
         // schedule a timer to update the number every 5 seconds
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
             // if no selection is made in time, count it as a wrong answer
             if timeRemaining > 0 && allowInput {
-                timeRemaining -= 1
+                timeRemaining -= 1 // decrement time
             } else {
-                timer?.invalidate()
+                timer?.invalidate() // stop the timer when it reaches 0
                 timeRemaining = 0
                 isCorrect = false
-                showResult = true
+                showResult = true // show X when the timer expires
                 wrongAnswers += 1
                 attemptCount += 1
-                allowInput = false // prevent input when the timer runs out
+                allowInput = false // prevent additional input
                 
                 
                 if attemptCount >= 10 {
@@ -181,7 +181,7 @@ struct ContentView: View {
                     showResult = false
                     timer?.invalidate()
                 } else {
-                    resetNumber()
+                    resetNumber() // reset the round after the timer expires
                 }
             }
         }
@@ -189,9 +189,9 @@ struct ContentView: View {
     
     // function to restart the timer after every answer given
     func resetTimer() {
-        timer?.invalidate()
-        timeRemaining = 5
-        startTimer()
+        timer?.invalidate() // stop any existing timer
+        timeRemaining = 5 // restart timer to 5 seconds
+        startTimer() // start a fresh countdown
     }
 
 
