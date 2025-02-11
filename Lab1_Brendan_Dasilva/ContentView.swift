@@ -14,6 +14,7 @@ struct ContentView: View {
     // variables for result and correct choice
     @State private var showResult: Bool = false
     @State private var isCorrect: Bool = false
+    @State private var allowInput: Bool = true
     
     // variables to track correct and incorrect answers
     @State private var correctAnswers: Int = 0
@@ -22,6 +23,7 @@ struct ContentView: View {
     
     // variable for the 5-second timer - if user does not answer within 5 seconds, its recorded as an incorrect answer
     @State private var timer: Timer?
+    @State private var timeRemaining: Int = 5
     
     // dialogue box after 10 rounds
     @State private var showGameOverDialog: Bool = false
@@ -50,13 +52,19 @@ struct ContentView: View {
                 }
                 .frame(height: 50) // fixed height to prevent shifting after button press
                 
-                Spacer().frame(height: 100)
+                Spacer().frame(height: 50)
+                
+                // timer display
+                Text("Time Remaining: \(timeRemaining)")
+                    .font(.subheadline)
+                    .foregroundColor(timeRemaining > 1 ? .black : .red)
+                    .padding()
                 
                 HStack(spacing: 20) {
                     Button(action: { checkAnswer(isPrime: true) }) {
                         Text("Prime")
                             .font(.title)
-                            .frame(width: 175, height: 80) // ✅ Move frame inside button closure
+                            .frame(width: 175, height: 80)
                             .background(Color.blue)
                             .foregroundColor(.white)
                             .cornerRadius(10)
@@ -65,7 +73,7 @@ struct ContentView: View {
                     Button(action: { checkAnswer(isPrime: false) }) {
                         Text("Not Prime")
                             .font(.title)
-                            .frame(width: 175, height: 80) // ✅ Move frame inside button closure
+                            .frame(width: 175, height: 80)
                             .background(Color.orange)
                             .foregroundColor(.white)
                             .cornerRadius(10)
@@ -93,8 +101,9 @@ struct ContentView: View {
 
     // function to check answer and update the UI accordingly
     func checkAnswer(isPrime: Bool) {
-        // invalidate and restart the timer to avoid multiple runs
-        resetTimer()
+        guard allowInput else { return } // prevent multiple inputs when timer expires
+        allowInput = false
+        timer?.invalidate()
         
         // compare the users input with the actual result of the prime number check
         let correct = isPrime == isPrimeNumber(number)
@@ -126,6 +135,8 @@ struct ContentView: View {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
             showResult = false
             number = Int.random(in: 1...100)
+            allowInput = true // allow new input after number resets
+            resetTimer()
         }
     }
     
@@ -138,6 +149,8 @@ struct ContentView: View {
         showGameOverDialog = false
         showResult = false
         number = Int.random(in: 1...100)
+        timeRemaining = 5
+        allowInput = true // allow new input after number resets
         startTimer()
     }
     
@@ -146,29 +159,38 @@ struct ContentView: View {
     func startTimer() {
         // invalidate any existing timer before starting a new one
         timer?.invalidate()
+        timeRemaining = 5 // reset the timer
         
         // schedule a timer to update the number every 5 seconds
-        timer = Timer.scheduledTimer(withTimeInterval: 5.0, repeats: true) { _ in
+        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
             // if no selection is made in time, count it as a wrong answer
-            wrongAnswers += 1
-            attemptCount += 1
-            isCorrect = false
-            showResult = true
-            
-            if attemptCount >= 10 {
-                showGameOverDialog = true
-                showResult = false
-                timer?.invalidate()
+            if timeRemaining > 0 && allowInput {
+                timeRemaining -= 1
             } else {
-                resetNumber()
+                timer?.invalidate()
+                timeRemaining = 0
+                isCorrect = false
+                showResult = true
+                wrongAnswers += 1
+                attemptCount += 1
+                allowInput = false // prevent input when the timer runs out
+                
+                
+                if attemptCount >= 10 {
+                    showGameOverDialog = true
+                    showResult = false
+                    timer?.invalidate()
+                } else {
+                    resetNumber()
+                }
             }
         }
     }
     
-    
     // function to restart the timer after every answer given
     func resetTimer() {
         timer?.invalidate()
+        timeRemaining = 5
         startTimer()
     }
 
