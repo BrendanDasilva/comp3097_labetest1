@@ -11,6 +11,10 @@ struct ContentView: View {
     // generate a random number between 1 and 100, inclusive
     @State private var number: Int = Int.random(in: 1...100)
     
+    // variables for result and correct choice
+    @State private var showResult: Bool = false
+    @State private var isCorrect: Bool = false
+    
     var body: some View {
         VStack {
             Text("\(number)")
@@ -36,6 +40,12 @@ struct ContentView: View {
         .padding()
     }
 }
+
+// function to check answer
+
+
+// function to check if the number is prime or not
+
 
 #Preview {
     ContentView()
