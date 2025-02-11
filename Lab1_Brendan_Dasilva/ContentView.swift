@@ -18,9 +18,13 @@ struct ContentView: View {
     // variables to track correct and incorrect answers
     @State private var correctAnswers: Int = 0
     @State private var wrongAnswers: Int = 0
+    @State private var attemptCount: Int = 0
     
     // variable for the 5-second timer - if user does not answer within 5 seconds, its recorded as an incorrect answer
     @State private var timer: Timer?
+    
+    // dialogue box after 10 rounds
+    @State private var showGameOverDialog: Bool = false
     
     
     var body: some View {
@@ -77,6 +81,15 @@ struct ContentView: View {
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .onAppear(perform: startTimer)
+            .alert(isPresented: $showGameOverDialog) {
+                Alert(
+                    title: Text("Game Over"),
+                    message: Text("Final Score:\nCorrect: \(correctAnswers)\nWrong: \(wrongAnswers)"),
+                    dismissButton: .default(Text("Restart")) {
+                        resetGame()
+                    }
+                )
+            }
         }
     
 
@@ -89,17 +102,25 @@ struct ContentView: View {
         isCorrect = correct
         showResult = true
         
+        // update correct or wrong answer count based on result
         if correct {
             correctAnswers += 1
         } else {
             wrongAnswers += 1
         }
         
-        resetNumber()
+        // increment attempt count and check if game should end
+        attemptCount += 1
+        if attemptCount >= 10 {
+            showGameOverDialog = true
+            timer?.invalidate()
+        } else {
+            resetNumber()
+        }
     }
     
     
-    // hide the result after 1 second and generate a new random number
+    // function to hide the result after 1 second and generate a new random number
     func resetNumber() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
             showResult = false
@@ -108,12 +129,33 @@ struct ContentView: View {
     }
     
     
-    // start timer
+    // function to reset the game after the game over dialog
+    func resetGame() {
+        correctAnswers = 0
+        wrongAnswers = 0
+        attemptCount = 0
+        showGameOverDialog = false
+        startTimer()
+    }
+    
+    
+    // function to start the timer that updates the number every 5 seconds
     func startTimer() {
+        // invalidate any existing timer before starting a new one
         timer?.invalidate()
+        
+        // schedule a timer to update the number every 5 seconds
         timer = Timer.scheduledTimer(withTimeInterval: 5.0, repeats: true) { _ in
+            // if no selection is made in time, count it as a wrong answer
             wrongAnswers += 1
-            number = Int.random(in: 1...100)
+            attemptCount += 1
+            
+            if attemptCount >= 10 {
+                showGameOverDialog = true
+                timer?.invalidate()
+            } else {
+                number = Int.random(in: 1...100)
+            }
         }
     }
 
