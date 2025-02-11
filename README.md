@@ -13,15 +13,13 @@ A simple SwiftUI game where the player determines whether a displayed number is 
 
 ## 🖥️ Screenshots
 ### 🎮 Gameplay
-![Gameplay Screenshot](screenshot_gameplay.png)
+<img src="screenshot_gameplay.png" width="300">
 
 ### ⏳ Timer Ending
-![Timer Ending Screenshot](screenshot_timer.png)
+<img src="screenshot_timer.png" width="300">
+
 
 ### 🏁 Game Over Screen
-![Game Over Screenshot](screenshot_gameover.png)
+<img src="screenshot_gameover.png" width="300">
 
-## 🛠️ Installation
-1. **Clone the repository**:
-   ```sh
-   git clone https://github.com/yourusername/prime-number-game.git
+## 🛠️ Author: Brendan Dasilva
