@@ -53,25 +53,23 @@ struct ContentView: View {
                 Spacer().frame(height: 100)
                 
                 HStack(spacing: 20) {
-                    Button("Prime") {
-                        checkAnswer(isPrime: true)
+                    Button(action: { checkAnswer(isPrime: true) }) {
+                        Text("Prime")
+                            .font(.title)
+                            .frame(width: 175, height: 80) // ✅ Move frame inside button closure
+                            .background(Color.blue)
+                            .foregroundColor(.white)
+                            .cornerRadius(10)
                     }
-                    .font(.title)
-                    .padding()
-                    .frame(width: 175, height: 80)
-                    .background(Color.blue)
-                    .foregroundColor(.white)
-                    .cornerRadius(10)
                     
-                    Button("Not Prime") {
-                        checkAnswer(isPrime: false)
+                    Button(action: { checkAnswer(isPrime: false) }) {
+                        Text("Not Prime")
+                            .font(.title)
+                            .frame(width: 175, height: 80) // ✅ Move frame inside button closure
+                            .background(Color.orange)
+                            .foregroundColor(.white)
+                            .cornerRadius(10)
                     }
-                    .font(.title)
-                    .padding()
-                    .frame(width: 175, height: 80)
-                    .background(Color.blue)
-                    .foregroundColor(.white)
-                    .cornerRadius(10)
                 }
                 .padding()
                 
