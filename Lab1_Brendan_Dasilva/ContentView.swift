@@ -95,6 +95,9 @@ struct ContentView: View {
 
     // function to check answer and update the UI accordingly
     func checkAnswer(isPrime: Bool) {
+        // invalidate and restart the timer to avoid multiple runs
+        resetTimer()
+        
         // compare the users input with the actual result of the prime number check
         let correct = isPrime == isPrimeNumber(number)
         
@@ -135,6 +138,7 @@ struct ContentView: View {
         wrongAnswers = 0
         attemptCount = 0
         showGameOverDialog = false
+        number = Int.random(in: 1...100)
         startTimer()
     }
     
@@ -157,6 +161,13 @@ struct ContentView: View {
                 number = Int.random(in: 1...100)
             }
         }
+    }
+    
+    
+    // function to restart the timer after every answer given
+    func resetTimer() {
+        timer?.invalidate()
+        startTimer()
     }
 
 
