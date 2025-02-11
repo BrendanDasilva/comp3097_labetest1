@@ -17,7 +17,7 @@ struct ContentView: View {
     
     var body: some View {
             VStack {
-                Spacer().frame(height: 30)
+                Spacer().frame(height: 30) // add some space to the top of the screen
                 
                 Text("\(number)")
                     .font(.system(size: 80, weight: .bold))
@@ -68,12 +68,16 @@ struct ContentView: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
 
-    // function to check answer
+    // function to check answer and update the UI accordingly
     func checkAnswer(isPrime: Bool) {
+        // compare the users input with the actual result of the prime number check
         let correct = isPrime == isPrimeNumber(number)
+        
+        // update the result state
         isCorrect = correct
         showResult = true
         
+        // hide the result after 1 second and generate a new random number
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
             showResult = false
             number = Int.random(in: 1...100)
@@ -83,11 +87,14 @@ struct ContentView: View {
 
     // function to check if the number is prime or not
     func isPrimeNumber(_ n: Int) -> Bool {
+        // prime numbers greater than 1
         if n < 2 { return false }
+        
+        // check divisibility from 2 up to (but not including) n
         for i in 2..<n {
-            if n % i == 0 { return false }
+            if n % i == 0 { return false } // if divisible, it's not a prime number
         }
-        return true
+        return true // if no divisors were found, it's a prime number
     }
 }
 
