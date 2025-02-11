@@ -15,6 +15,13 @@ struct ContentView: View {
     @State private var showResult: Bool = false
     @State private var isCorrect: Bool = false
     
+    // variables to track correct and incorrect answers
+    @State private var correctAnswers: Int = 0
+    @State private var wrongAnswers: Int = 0
+    
+    // variable for the 5-second timer - if user does not answer within 5 seconds, its recorded as an incorrect answer
+    @State private var timer: Timer?
+    
     var body: some View {
             VStack {
                 Spacer().frame(height: 30) // add some space to the top of the screen
@@ -64,6 +71,8 @@ struct ContentView: View {
                 .padding()
                 
                 Spacer()
+                
+                Text("Correct: \(correctAnswers) | Wrong: \(wrongAnswers)")
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
